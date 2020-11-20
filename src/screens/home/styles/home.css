@@ -1,0 +1,21 @@
+body{
+    background-color:rgb(96, 165, 243);
+}
+.navs1{
+    display: flex;
+    flex-direction: row;
+      align-items: center;
+        color: white; 
+        padding: 15px; 
+   
+  }
+  .text1{
+      color: white;
+  }
+  
+  .trello1{
+    height: 30px;
+    }
+.icons{
+    color: white;
+}

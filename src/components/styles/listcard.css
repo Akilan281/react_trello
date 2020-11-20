@@ -1,0 +1,78 @@
+
+.listback{
+    width: 100%;
+    display: flex;
+    flex-direction: row;   
+    }
+
+.list-wrapper2 {
+    min-height: 20%;
+    max-height: 100%;   
+   width: 100%;  
+}
+
+.list-wrapper2 {
+    min-height: 20%;
+    max-height: 100%;   
+   width: 100%; 
+  
+   display: grid;
+   grid-template-columns: 272px repeat(4,1fr)  ;
+   grid-gap: 5px;
+}
+
+.list1{   
+    background-color: hsla(0,0%,100%,.24); 
+    cursor: pointer;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+  width: 100%;
+   height: 80px;
+   
+       }
+
+   .card-composer{
+   
+    max-height: 50px;
+    max-width: 100%;
+    margin-left: 20px;   
+     }
+
+     .card-comp {
+        border-radius: 3px;
+        color: #5e6c84;
+        height: 100%;
+        display: block;
+        width: 90%;   
+  
+        }
+
+        .list2{
+            background-color: #ebecf0;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+           }
+        
+            
+           .card-composer1{
+            height: 38px;
+        width:100%;
+        display: flex;
+        justify-content: center;
+        }
+        
+      
+        
+        .cardss{
+       width: 95%;
+        }
+        
+        .cardsitem1{        
+            display: flex;
+            flex-direction: row;
+            justify-content:space-between ;        
+        }
+      
