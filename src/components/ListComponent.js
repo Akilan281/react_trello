@@ -3,7 +3,7 @@ import './styles/listcard.css'
 import { randomId } from '../common/Utils';
 import CardsComponent from './CardsComponent'
 import { connect } from 'react-redux'
-import {listData} from '../redux/action/Action'
+import { listData } from '../redux/action/Action'
 
 function ListComponent(props) {
 
@@ -13,14 +13,18 @@ function ListComponent(props) {
     const [cardinput, setCardInput] = useState(false)
     const [currentIndex, setCurrentIndex] = useState('')
     const [cardname, setCardName] = useState('')
+    const [showModal, setshowModal] = useState(false)
+    const [cardInformation, setCardInformation] = useState({})
+    const [cardIndex, setCardIndex] = useState('')
+
     useEffect(() => {
 
         let userdetails = JSON.parse(localStorage.getItem('todolist')) ?? []
         console.log('userdetails', userdetails)
         setListName(userdetails)
-        console.log("newlistredux",props.newlist)
+        console.log("newlistredux", props.newlist)
         props.contactdata(userdetails)
-        console.log("newlistredux",props.newlist)
+        console.log("newlistredux", props.newlist)
     }, [])
 
     function handleAddlist() {
@@ -77,131 +81,169 @@ function ListComponent(props) {
         console.log(indexoflist)
 
         let cardData = newcard[indexoflist].cardlist
-        let cardObj = {
-            cardTitle: cardname,
-            cardid: randomId(),
-            description: '',
-            comments: ''
+        let indexofcard = cardData.findIndex((carditem) => carditem.cardid == item.cardid)
+        let cardObj = {}
+
+        if (indexofcard != -1) {
+            cardObj = {
+                cardTitle: item.cardTitle,
+                cardid: item.cardid,
+                description: item.description,
+                comments: item.comments
+            }
+            cardData[indexofcard] = cardObj
+        } else {
+            cardObj = {
+                cardTitle: cardname,
+                cardid: randomId(),
+                description: '',
+                comments: ''
+            }
+            cardData.push(cardObj)
         }
-        cardData.push(cardObj)
+
+
         newcard[indexoflist].cardlist = cardData
         console.log("carddata", newcard)
         setListName(newcard)
-       localStorage.setItem('todolist', JSON.stringify(newcard))
-       props.contactdata(newcard)
-       setCardInput(false)
+        localStorage.setItem('todolist', JSON.stringify(newcard))
+        props.contactdata(newcard)
+        setCardInput(false)
     }
     function handleCardDel(index, yindex) {
-        let delCard =  JSON.parse(localStorage.getItem('todolist')) ?? []
-        console.log("delCard",delCard)
-        console.log("index",index)
-        console.log("yindex",yindex)
+        let delCard = JSON.parse(localStorage.getItem('todolist')) ?? []
+        console.log("delCard", delCard)
+        console.log("index", index)
+        console.log("yindex", yindex)
         delCard[index].cardlist.splice(yindex, 1);
         setListName(delCard)
         localStorage.setItem('todolist', JSON.stringify(delCard))
-        props.contactdata(delCard)    
+        props.contactdata(delCard)
     }
 
-    {console.log("props.newlist",props.newlist)}
+    { console.log("props.newlist", props.newlist) }
+
+    function editCard(index, yitem, yindex, listid) {
+        yitem.parentindex = index
+        yitem.cardindex = yindex
+        yitem.listid = listid
+        setCardInformation(yitem)
+        setshowModal(true)
+    }
+
+    function onUpdateCard(card) {
+        addingNewCard(card)
+    }
+
+    function closeModal(value) {
+        setshowModal(value)
+    }
 
     return (
 
 
         <div className="listback container-fluid">
-            <div className="list-wrapper2 ">
-                {
-                    listName.map((item, index) => {
-                        return (
+            {
+                !showModal ?
+                    <div className="list-wrapper2 ">
+                        {
+                            listName.map((item, index) => {
+                                return (
 
-                            <div className="list2">
-                                <div className="card-composer1">
+                                    <div className="list2">
+                                        <div className="card-composer1">
 
-                                    <div className="cardss">
-
-                                        <div className="cardsitem1">
-                                            <div className="text2" >{item.title} </div >
-
-                                            <div><i className=" icon fa fa-trash" onClick={() => deleteList(item, index)} ></i></div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                {/* <CardsComponent cardDetails={item} cardindex={index} /> */}
-                                {
-                                    item.cardlist.map((yitem, yindex)=>{
-                                        return(
-                                            < div className="card-composer1">
-                                <div className="cards1">
-                                    <div className="cards2"  type="button" data-toggle="modal" data-target="#exampleModalCenter">
-                                        <span > {yitem.cardTitle} </span> <span><i onClick={() => { handleCardDel(index, yindex) }}  className="fa trshicon fa-trash"></i></span>
-                                    </div>
-                                </div>
-                            </ div>
-
-                                        )
-                                    })
-                                }
-
-                                {
-                                    cardinput && currentIndex == index ?
-                                        <div>
-                                            < div className="card-composer1">
-                                                <div className="cardss">
-                                                    <input className="form-control" placeholder="Enter title for this card" onChange={(e) => addCardName(e.target.value)}></input>
-                                                </div>
-                                            </div>
-                                            <div className="cardss"><button className="btn btn-success" onClick={() => addingNewCard(item)}>Add card</button></div>
-                                        </div> : <div className="card-composer">
                                             <div className="cardss">
 
-                                                <div className="text3" onClick={() => cardAdding(index)}> <span>+ Add a card </span> </div>
+                                                <div className="cardsitem1">
+                                                    <div className="text2" >{item.title} </div >
+
+                                                    <div><i className=" icon fa fa-trash" onClick={() => deleteList(item, index)} ></i></div>
+
+                                                </div>
+
                                             </div>
 
                                         </div>
-                                }
 
-                            </div>
 
-                        )
-                    })
-                }
-                {
-                    listAdd ?
-                        <div>
-                            <div className="list1">
-                                <div className="card-composer2">
-                                    <div className="card-comp2" >
-                                        <input className="for form-control" placeholder="Enter list title" onChange={(e) => handleListTitle(e.target.value)}></input>
+                                        {
+                                            item.cardlist.map((yitem, yindex) => {
+                                                return (
+                                                    < div className="card-composer1">
+                                                        <div className="cards1">
+                                                            <div className="cards2" type="button" data-toggle="modal" data-target="#exampleModalCenter">
+                                                                <span onClick={() => editCard(index, yitem, yindex, item.listid)}> {yitem.cardTitle} </span> <span><i onClick={() => { handleCardDel(index, yindex) }} className="fa trshicon fa-trash"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </ div>
+
+                                                )
+                                            })
+                                        }
+
+                                        {
+                                            cardinput && currentIndex == index ?
+                                                <div>
+                                                    < div className="card-composer1">
+                                                        <div className="cardss">
+                                                            <input className="form-control" placeholder="Enter title for this card" onChange={(e) => addCardName(e.target.value)}></input>
+                                                        </div>
+                                                    </div>
+                                                    <div className="cardss"><button className="btn btn-success" onClick={() => addingNewCard(item)}>Add card</button></div>
+                                                </div> : <div className="card-composer">
+                                                    <div className="cardss">
+
+                                                        <div className="text3" onClick={() => cardAdding(index)}> <span>+ Add a card </span> </div>
+                                                    </div>
+
+                                                </div>
+                                        }
 
                                     </div>
-                                    <div>
-                                        <button className="btn btn-success btn-sm " onClick={addNewList} > Add card</button>
-                                        <span
-                                            className="btn" onClick={handleHideAdd}> X
+
+                                )
+                            })
+                        }
+                        {
+                            listAdd ?
+                                <div>
+                                    <div className="list1">
+                                        <div className="card-composer2">
+                                            <div className="card-comp2" >
+                                                <input className="for form-control" placeholder="Enter list title" onChange={(e) => handleListTitle(e.target.value)}></input>
+
+                                            </div>
+                                            <div>
+                                                <button className="btn btn-success btn-sm " onClick={addNewList} > Add card</button>
+                                                <span
+                                                    className="btn" onClick={handleHideAdd}> X
                                                 </span>
 
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div> : <div className="list1">
+                                    <div className="card-composer2">
+                                        <div className="card-comp" >
+                                            <div className="text1" onClick={handleAddlist}> <span>+ Add another list </span></div>
+                                        </div>
                                     </div>
                                 </div>
-
-                            </div>
-                        </div> : <div className="list1">
-                            <div className="card-composer2">
-                                <div className="card-comp" >
-                                    <div className="text1" onClick={handleAddlist}> <span>+ Add another list </span></div>
-                                </div>
-                            </div>
-                        </div>
-                }
+                        }
 
 
-            </div>
+                    </div> : <CardsComponent cardDetails={cardInformation} deleteCB={handleCardDel} updateCB={onUpdateCard} modalCB={closeModal} />
+
+            }
 
 
+            {/* {
+    showModal ?
+    :null
 
-            {  console.log("listName", listName)}
+} */}
 
 
         </div>
@@ -214,14 +256,14 @@ function ListComponent(props) {
 const mapStateToProps = ({ HomeReducer }) => {
     return {
         newlist: HomeReducer.newlist,
-        
+
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         contactdata: (data) => (dispatch(listData(data))),
-        
+
     }
 }
 

@@ -1,88 +1,92 @@
 import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
+import { listData } from '../redux/action/Action'
 
 function CardsComponent(props) {
 
-    const [cards, setCards] = useState([])
-    const [indexx, setIndexx] = useState("")
+    const [description, setDescription] = useState(props.cardDetails.description)
+    const [comments, setComments] = useState(props.cardDetails.comments)
 
+    useEffect(() => {
+        let message = props.cardDetails
+        console.log("message", message)
+    }, [])
 
-    function handleCardDel(item, index) {
-        let listinfo =  JSON.parse(localStorage.getItem('todolist')) ?? []
-        console.log("listinfo",listinfo)
-        let cardInfo = props.cardDetails
-        console.log("cardInfo",cardInfo)
-        let indexofList = props.cardindex
-        console.log("indexofList",indexofList)
-        console.log("item",item)
-        console.log("index",index)
-        let detailsOfCard = listinfo[indexofList].cardlist
-        console.log("detailsOfCard",detailsOfCard)
-    //  detailsOfCard.splice(index,1)
-        console.log("detailsOfCard",detailsOfCard)
-        // localStorage.setItem('todolist', JSON.stringify(detailsOfCard))
-    
+    function handleclose() {
+        props.modalCB(false)
     }
-    {console.log("props.cardDetails.cardlist",props.cardDetails)}
+
+    function handleinput(value, type) {
+        if (type == "desc") {
+            setDescription(value)
+        } else {
+            setComments(value)
+        }
+    }
+
+    function deleteCard() {
+        props.deleteCB(props.cardDetails.parentindex, props.cardDetails.cardindex)
+        props.modalCB(false)
+    }
+
+    function addDescription() {
+        let cardmessages = Object.assign({}, props.cardDetails)
+        cardmessages.description = description
+        props.updateCB(cardmessages)
+        props.modalCB(false)
+    }
+    function addComments() {
+        let cardmessages = Object.assign({}, props.cardDetails)
+        cardmessages.comments = comments
+        props.updateCB(cardmessages)
+        props.modalCB(false)
+    }
     return (
-        
-        <div>
-            {
-
-                props.cardDetails.cardlist.map((yitem, yindex) => {
-                    return (
-                        <div>
-                            < div className="card-composer1">
-                                <div className="cards1">
-                                    <div className="cards2"  type="button" data-toggle="modal" data-target="#exampleModalCenter">
-                                        <span > {yitem.cardTitle} </span> <span><i onClick={() => { handleCardDel(yitem, yindex) }}  className="fa trshicon fa-trash"></i></span>
-                                    </div>
-                                </div>
-                            </ div>
-
-                            <div>
-
-                         
-
-                                </div>
-                            {/* <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-
-                                <div className="modal-dialog modal-dialog-centered" role="document">
-
-
-
-                                    <div className="modal-content">
-                                        <div className="modal-header">
-                                            <h5 className="modal-title" id="exampleModalLongTitle">{yitem.cardTitle}</h5>
-                                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div className="modal-body">
-                                           {cards.cardTitle}
-                                </div>
-                                        <div className="modal-footer">
-                                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" className="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div> */}
+   <div className="cardback">
+            <div className="list-wrapper1">
+            <div className="list3">
+                <div className="card-composer3">
+                    <div className="cards3">
+                        <div className="cardsitem3">
+                            <div className="text2" >{props.cardDetails.cardTitle} </div >
+                            <div><i className=" trshicon fa fa-trash" onClick={deleteCard} ></i></div>
                         </div>
-                    )
-                })
-            }
-               < div className="card-composer1">
-                                <div className="cards1">
-                                <div className="">
-                                     {cards.cardTitle}
-                                            </div>
-                                   
-                                </div>
-                            </ div>
+                        <div className="cardsinput">
+                            Add Description
+                    <input className="form-control" placeholder="Enter Description" value={description} onChange={(e) => handleinput(e.target.value, "desc")}></input>
+                            <button className="btn btn-success" onClick={addDescription}>Add description</button>
+                        </div>
+                        <div className="cardsinput">
+                            Add comments
+                    <textarea className="form-control" placeholder="Enter Comments" value={comments} onChange={(e) => handleinput(e.target.value)}></textarea>
+                            <button className="btn btn-success" onClick={addComments} >Add comments</button>
+                        </div>
+                        <div className="cardsitem3"> <button className="btn btn-primary">Add Changes</button>
+                            <button className="btn btn-danger" onClick={handleclose}>close</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
         </div>
+   </div>
     )
 }
 
-export default CardsComponent
+const mapStateToProps = ({ HomeReducer }) => {
+    return {
+        newlist: HomeReducer.newlist,
+
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        contactdata: (data) => (dispatch(listData(data))),
+
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CardsComponent)

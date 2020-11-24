@@ -5,19 +5,15 @@
     flex-direction: row;   
     }
 
-.list-wrapper2 {
-    min-height: 20%;
-    max-height: 100%;   
-   width: 100%;  
-}
 
 .list-wrapper2 {
-    min-height: 20%;
-    max-height: 100%;   
    width: 100%;
    display: grid;
-   grid-template-columns:  repeat(4,1fr)  ;
+   grid-auto-columns: 272px;
+   grid-auto-flow: column;
    grid-gap: 5px;
+   overflow-y: scroll;
+   padding: 15px;
 }
 
 .list1{   
@@ -46,7 +42,7 @@
         }
 
         .list2{
-            background-color: #ebecf0;
+            background-color: #5c93fa;
             cursor: pointer;
             border-radius: 3px;
             display: flex;
@@ -73,8 +69,8 @@
         .cardsitem1{        
             display: flex;
             flex-direction: row;
-            justify-content:space-between ;  
-                 
+            justify-content:space-between ; 
+                
         }
         .cards1{
             width: 100%;
@@ -97,3 +93,48 @@
         .trshicon{
             float: right;
         }
+
+.cardback{
+    width:100%;
+    display: flex;
+    justify-content: center;
+}
+
+        .card-composer3{
+            height: 400px;
+        width:100%;
+      
+        }
+
+
+        .cardsitem3{        
+            display: flex;
+            flex-direction: row;
+            justify-content:space-around ; 
+                
+        }
+        .cards3{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-top: 10px;   
+        }
+
+        .cardsinput{
+            margin: 20px;
+        }
+
+        .list-wrapper1{
+         display: flex;
+         justify-content: center;
+        }
+
+        
+        .list3{
+            background-color: #ebecf0;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+           }
